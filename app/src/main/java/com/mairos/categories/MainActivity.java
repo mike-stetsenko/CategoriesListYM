@@ -1,38 +1,38 @@
 package com.mairos.categories;
 
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
+import com.mairos.categories.network.CategoriesRequest;
+import com.mairos.categories.network.CategoriesSpiceService;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
+
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenu;
+
+@EActivity(R.layout.activity_main)
+@OptionsMenu(R.menu.menu_main)
 public class MainActivity extends AppCompatActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
-
+    private SpiceManager mSpiceManager = new SpiceManager(CategoriesSpiceService.class);
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    protected void onStart() {
+        mSpiceManager.start(this);
+        super.onStart();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    protected void onStop() {
+        mSpiceManager.shouldStop();
+        super.onStop();
+    }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+    @OptionsItem(R.id.action_update)
+    void actionUpdate() {
+        CategoriesRequest request = new CategoriesRequest();
 
-        return super.onOptionsItemSelected(item);
+        mSpiceManager.execute(request, 0, DurationInMillis.ALWAYS_EXPIRED, null);
     }
 }
