@@ -16,4 +16,16 @@ public class CategoryNetwork {
 
     @SerializedName("subs")
     private List<CategoryNetwork> categories;
+
+    public List<CategoryNetwork> getCategories() {
+        return categories;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
 }
