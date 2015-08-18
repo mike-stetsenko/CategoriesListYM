@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Категории</string>
+    <string name="action_settings">Настройки</string>
+    <string name="message.success_loaded">Данные успешно загружены</string>
+    <string name="message.not_loaded">Данные не загружены</string>
+    <string name="message.no_network_found">Сеть не найдена. Проверьте подключение </string>
+    <string name="title.categories">Разделы</string>
+    <string name="message.loading_in_progress">Идёт загрузка данных ...</string>
+</resources>

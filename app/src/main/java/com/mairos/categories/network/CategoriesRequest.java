@@ -1,5 +1,7 @@
 package com.mairos.categories.network;
 
+import com.mairos.categories.CategoriesApplication;
+import com.mairos.categories.R;
 import com.mairos.categories.data.Storage;
 import com.mairos.categories.data.models.CategoryStorage;
 import com.mairos.categories.events.CategoriesLoadedEvent;
@@ -28,14 +30,23 @@ public class CategoriesRequest extends SpiceRequest<Void> {
                     .build();
 
             MoneyYandexApi retrofitService = restAdapter.create(MoneyYandexApi.class);
+            CategoriesApplication app = CategoriesApplication.getInstance();
 
-            List<CategoryNetwork> categories = retrofitService.getCategories();
+            try {
+                Thread.sleep(2000);
+                List<CategoryNetwork> categories = retrofitService.getCategories();
+                Storage.get().clearTable(CategoryStorage.class);
 
-            Storage.get().clearTable(CategoryStorage.class);
+                addCategoryToDB(0, categories);
 
-            addCategoryToDB(0, categories);
+                EventBus.getDefault().postSticky(new CategoriesLoadedEvent(true,
+                        app.getString(R.string.message_success_loaded)));
+            } catch (Exception e){
 
-            EventBus.getDefault().post(new CategoriesLoadedEvent(true, "succesfully loaded"));
+                EventBus.getDefault().postSticky(new CategoriesLoadedEvent(false,
+                        app.getString(R.string.message_not_loaded) + ": " + e.getMessage()));
+                throw e;
+            }
 
             return null;
     }
@@ -44,7 +55,7 @@ public class CategoriesRequest extends SpiceRequest<Void> {
         CategoryStorage nodeToDB;
         long newParentId;
         for(CategoryNetwork node : nodes) {
-            nodeToDB = new CategoryStorage(parentId, node.getId(), node.getTitle());
+            nodeToDB = new CategoryStorage(parentId, node.getId(), node.getTitle(), node.getCategories() != null);
             newParentId = Storage.get().put(nodeToDB);
             if (node.getCategories() != null){
                 addCategoryToDB(newParentId, node.getCategories());
