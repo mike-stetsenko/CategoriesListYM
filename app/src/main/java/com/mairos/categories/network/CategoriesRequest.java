@@ -33,7 +33,6 @@ public class CategoriesRequest extends SpiceRequest<Void> {
             CategoriesApplication app = CategoriesApplication.getInstance();
 
             try {
-                Thread.sleep(2000);
                 List<CategoryNetwork> categories = retrofitService.getCategories();
                 Storage.get().clearTable(CategoryStorage.class);
 

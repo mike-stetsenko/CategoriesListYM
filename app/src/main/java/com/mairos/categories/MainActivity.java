@@ -15,6 +15,7 @@ import com.mairos.categories.data.models.CategoryStorage;
 import com.mairos.categories.events.CategoriesLoadedEvent;
 import com.mairos.categories.network.CategoriesRequest;
 import com.mairos.categories.network.CategoriesSpiceService;
+import com.mairos.categories.network.RequestStatusObject;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 
@@ -74,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         stopShowLoading();
         Toast.makeText(this, event.message, Toast.LENGTH_LONG).show();
 
+        RequestStatusObject.getInstance().setFinished();
+
         if (event.success) {
             clearFragments();
             showCategory(ROOT_CATEGORY_ID);
@@ -98,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
             request.setRetryPolicy(null);
 
             mSpiceManager.execute(request, 0, DurationInMillis.ALWAYS_EXPIRED, null);
+            RequestStatusObject.getInstance().setStarted();
 
             startShowLoading();
         } else {
