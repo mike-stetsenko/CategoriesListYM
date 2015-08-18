@@ -81,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
             clearFragments();
             showCategory(ROOT_CATEGORY_ID);
         }
+
+        EventBus.getDefault().removeStickyEvent(event);
     }
 
     @UiThread
